@@ -1,4 +1,5 @@
 import sys
+import matplotlib.pyplot as plt
 
 while True:
     try:
@@ -228,8 +229,28 @@ print(f"今期の予想固定費は: {all_total_costs}")
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # 次に損益分岐までに必要な売上を計算する
 
-f = all_total_costs
-target_price = int(input("商品「１つあたり」の目標価格を入力してください: "))
 
-def brekeEvenPointCalculation():
-    return None
+f = all_total_costs
+import_price = [14,15,16]
+
+def variableCostCalculation(import_price):
+    variable_cost = import_price + 2
+    return variable_cost
+
+def breakEvenPointCalculation(f, target_price, variable_cost):
+    break_even_point = f/(target_price - variable_cost)
+    return break_even_point
+
+def printEvenPointCalculation(f, import_price, target_price):
+    for i in import_price:
+        variable_cost = variableCostCalculation(i)
+        print(f"平均仕入れ価格: {i} --> 変動費: {variable_cost}\n")
+        max_price = min(target_price + 5, 40)
+        min_price = max(target_price - 5, 20)
+        prices = range(min_price, max_price + 1)
+        for target_price in prices:
+            break_even_point = breakEvenPointCalculation(f, target_price, variable_cost)
+            print(f"目標価格: {target_price} --> 必要販売数: {break_even_point}")
+
+target_price = int(input("今期、商品ひとつあたりの目標販売価格を入力してください（範囲: 20~40) : "))
+printEvenPointCalculation(f, import_price, target_price)
