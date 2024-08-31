@@ -1,4 +1,4 @@
-import sys
+import sys, math
 import matplotlib.pyplot as plt
 
 while True:
@@ -238,7 +238,7 @@ def variableCostCalculation(import_price):
     return variable_cost
 
 def breakEvenPointCalculation(f, target_price, variable_cost):
-    break_even_point = f/(target_price - variable_cost)
+    break_even_point = math.ceil(f/(target_price - variable_cost))
     return break_even_point
 
 def printEvenPointCalculation(f, import_price, target_price):
@@ -251,6 +251,36 @@ def printEvenPointCalculation(f, import_price, target_price):
         for target_price in prices:
             break_even_point = breakEvenPointCalculation(f, target_price, variable_cost)
             print(f"目標価格: {target_price} --> 必要販売数: {break_even_point}")
+while True:
+    try:
+        target_price = int(input("今期、商品ひとつあたりの目標販売価格を入力してください（範囲: 20~40) : "))
+        if 20 <= target_price <= 40:
+            break
+    except ValueError:
+            print(f"20から40までの数字で入力してください")
 
-target_price = int(input("今期、商品ひとつあたりの目標販売価格を入力してください（範囲: 20~40) : "))
 printEvenPointCalculation(f, import_price, target_price)
+
+# ----------------------------------------------------------------------------------------------------------------------------------
+# 損益分岐点の関係をグラフ化する関数
+def GraphDisplay(f, import_price, target_price):
+    prices = range(max(target_price - 5, 20), min(target_price + 5, 40) + 1)
+    for i in import_price:
+        variable_cost = variableCostCalculation(i)
+        break_even_points = []
+        for price in prices:
+            bep = breakEvenPointCalculation(f, price, variable_cost)
+            break_even_points.append(bep if bep != float('inf') else None)
+        
+        plt.plot(prices, break_even_points, marker='o', label=f'Variable Costs: {variable_cost}')
+
+    plt.title("Relationship between BreakEvenPoint and Prices")
+    plt.xlabel("Prices")
+    plt.ylabel("BreakEvenPoint (Sum of Sales)")
+    plt.xticks(prices)
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+# グラフ表示を実行
+GraphDisplay(f, import_price, target_price)
