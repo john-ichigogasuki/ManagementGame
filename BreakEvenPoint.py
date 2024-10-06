@@ -137,7 +137,7 @@ while True:
     except ValueError:
         print("数値を入力してください")
 
-def SeniorStrategyCostsCalculation(red_button, blue_button, yellow_button): #シニア卓ルールの時のみに呼び出す
+def SeniorStrategyCostsCalculation(red_button, blue_button, yellow_button, green_button, orange_button): #シニア卓ルールの時のみに呼び出す
     total_red_costs, total_blue_costs, total_yellow_costs = 0,0,0
     if red_button != 0:
         express = int(input("「赤チップ」特急個数を入力: "))
@@ -166,18 +166,28 @@ def SeniorStrategyCostsCalculation(red_button, blue_button, yellow_button): #シ
         else:
             yellow_ready_costs = yellow_button * 20
             total_yellow_costs = yellow_ready_costs
-    total_costs =  total_red_costs + total_blue_costs + total_yellow_costs
+    green_cost = green_button*20
+    orange_cost = orange_button*5
+    total_costs =  total_red_costs + total_blue_costs + total_yellow_costs + green_cost + orange_cost
     return total_costs
 
-def JuniorStrategyCostsCalculation(red_button, blue_button, yellow_button): #ジュニア卓ルールの時のみに呼び出す
+def JuniorStrategyCostsCalculation(red_button, blue_button, yellow_button, green_button, orange_button): #ジュニア卓ルールの時のみに呼び出す
     red_cost, blue_cost, yellow_cost = 0,0,0
-    if red_button != 0:
+    if red_button > 4:
+        red_cost = (red_button - 3)*20
+    else:
         red_cost = 20
-    if blue_button != 0:
+    if blue_button > 4:
+        blue_cost = (blue_button - 3)*20
+    else:
         blue_cost = 20
-    if yellow_button != 0:
+    if yellow_button > 4:
+        yellow_cost = (yellow_cost - 3)*20
+    else:
         yellow_cost = 20
-    total_costs = red_cost + blue_cost + yellow_cost
+    green_cost = green_button*20
+    orange_cost = orange_button*5
+    total_costs = red_cost + blue_cost + yellow_cost + green_cost + orange_cost
     return total_costs
 
 # 減価償却を計算
@@ -196,6 +206,7 @@ def depreciations(small_machines, large_machines, attachments):
         large_depreciations = int(40)
         attachments_depreciations = int(6)
         depreciations_cost = small_machines*small_depreciations + large_machines*large_depreciations + attachments*attachments_depreciations
+    print(f"減価償却費：{depreciations_cost}円")
     return depreciations_cost
 
 
@@ -216,9 +227,9 @@ other_costs = int(input("その他人件費や損失を入力してください(
 
 def all_total_costs_calculation():
     if table_rule == 1:
-        all_total_costs = personnelAndMachineCosts(term, employee_now, employee_max, machine) + SeniorStrategyCostsCalculation(red_button, blue_button, yellow_button) + depreciations(small_machines, large_machines, attachments) + loansCalculation(short_term_loans, long_term_loans)*2 + other_costs
+        all_total_costs = personnelAndMachineCosts(term, employee_now, employee_max, machine) + SeniorStrategyCostsCalculation(red_button, blue_button, yellow_button, green_button, orange_button) + depreciations(small_machines, large_machines, attachments) + loansCalculation(short_term_loans, long_term_loans)*2 + other_costs
     else:
-        all_total_costs = personnelAndMachineCosts(term, employee_now, employee_max, machine) + JuniorStrategyCostsCalculation(red_button, blue_button, yellow_button) + depreciations(small_machines, large_machines, attachments) + loansCalculation(short_term_loans, long_term_loans)*2 + other_costs
+        all_total_costs = personnelAndMachineCosts(term, employee_now, employee_max, machine) + JuniorStrategyCostsCalculation(red_button, blue_button, yellow_button, green_button, orange_button) + depreciations(small_machines, large_machines, attachments) + loansCalculation(short_term_loans, long_term_loans)*2 + other_costs
     return all_total_costs
 
 all_total_costs = all_total_costs_calculation()
